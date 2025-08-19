@@ -1,0 +1,104 @@
+### GET ALL
+### Obtener todos los characters
+GET http://localhost:3000/api/characters
+
+### GET ONE
+### Obtener un character
+GET http://localhost:3000/api/characters/{{idToUpdate}}
+
+### POST
+### Crear un nuevo character
+POST http://localhost:3000/api/characters
+Content-Type: application/json
+
+{
+  "name": "Valkiria",
+  "characterClass": 1,
+  "items": [1],
+  "attack": 10,
+  "mana": 10,
+  "hp": 10,
+  "level": 1
+}
+
+### POST2
+POST http://localhost:3000/api/characters
+Content-Type: application/json
+
+{
+  "name": "Arquero Magico",
+  "characterClass": 1,
+  "items": [2],
+  "attack": 20,
+  "mana": 30,
+  "hp": 10,
+  "level": 1
+}
+
+### POST3
+# @name createCharacterToShow
+POST http://localhost:3000/api/characters
+Content-Type: application/json
+
+{
+  "name": "Murcielagos",
+  "characterClass": 2,
+  "items": [],
+  "attack": 10,
+  "mana": 15,
+  "hp": 5,
+  "level": 1
+}
+
+### POST CHARACTER TO UPDATE
+# @name createCharacterToUpdate
+POST http://localhost:3000/api/characters
+Content-Type: application/json
+
+{
+  "name": "Dragon Infernal",
+  "characterClass": 2,
+  "items": [1,2],
+  "attack": 15,
+  "mana": 25,
+  "hp": 15,
+  "level": 1
+}
+
+### POST CHARACTER TO DELETE
+# @name createCharacterToDelete
+POST http://localhost:3000/api/characters
+Content-Type: application/json
+
+{
+  "name": "Futbolista",
+  "characterClass": 3,
+  "items": [],
+  "attack": 20,
+  "mana": 30,
+  "hp": 10,
+  "level": 1
+}
+
+### PUT
+### Modificar un character
+PUT http://localhost:3000/api/characters/{{idToUpdate}}
+Content-Type: application/json
+
+{
+  "name": "Rayo",
+  "characterClass": 3,
+  "items": [],
+  "attack": 20,
+  "mana": 20,
+  "hp": 10,
+  "level": 1
+}
+
+### Borrar un character
+DELETE http://localhost:3000/api/characters/{{idToDelete}}
+
+### IDs
+@id = {{createCharacterToShow.response.body.data.id}}
+@idToUpdate = {{createCharacterToUpdate.response.body.data.id}}
+@idToDelete = {{createCharacterToDelete.response.body.data.id}}

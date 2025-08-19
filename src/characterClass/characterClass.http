@@ -1,0 +1,66 @@
+### GET ALL 
+### Obtener todas las character classes 
+GET http://localhost:3000/api/characterClasses
+
+### GET ONE
+### Obtener una character class
+GET http://localhost:3000/api/characterClasses/{{id}}
+
+### POST
+### Crear una nueva character class
+POST http://localhost:3000/api/characterClasses
+Content-Type: application/json
+
+{
+    "name": "Tropa Terrestre",
+    "description": "Ataca a todo tipo de enemigo terrestre."
+}
+
+### POST 2
+# @name createCharacterClass
+POST http://localhost:3000/api/characterClasses
+Content-Type: application/json
+
+{
+    "name": "Tropa Aerea",
+    "description": "Ataca a todo tipo de enemigo terrestre o aereo."
+}
+
+### POST 3
+# @name createCharacterClassToUpdate
+POST http://localhost:3000/api/characterClasses
+Content-Type: application/json
+
+{
+    "name": "Hechizo",
+    "description": "Poder que elimina enemigos en cierto radio a la redonda de donde se tire el mismo."
+}
+
+### POST CHARACTER CLASS TO DELETE
+# @name createCharacterClassToDelete
+POST http://localhost:3000/api/characterClasses
+Content-Type: application/json
+
+{
+    "name": "Estructura",
+    "description": "Estructura fija que ataca enemigos terrestres."
+}
+
+### PUT
+### Modificar una character class
+PUT http://localhost:3000/api/characterClasses/{{idToUpdate}}
+Content-Type: application/json
+
+{
+    "name": "Hechizo",
+    "description": "Poder que ataca enemigos en cierto radio a la redonda de donde se tire el mismo."
+}
+
+### DELETE
+### Borrar una character class
+DELETE http://localhost:3000/api/characterClasses/{{idToDelete}}
+
+### IDs
+@id = {{createCharacterClass.response.body.data.id}}
+@idToUpdate = {{createCharacterClassToUpdate.response.body.data.id}}
+@idToDelete = {{createCharacterClassToDelete.response.body.data.id}}
