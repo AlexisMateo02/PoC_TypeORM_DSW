@@ -4,7 +4,7 @@ import { Property } from '../property/property.entity.js'
 import { ContractRequest } from '../contractRequest/contractRequest.entity.js'
 import { Visit } from '../visit/visit.entity.js'
 
-@Entity('agente_asignado')
+@Entity()
 export class AssignedAgent {
     @PrimaryColumn({ type: 'int', unsigned: true })
     agentId!: number

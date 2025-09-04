@@ -1,6 +1,6 @@
 import { Entity, PrimaryColumn, ManyToOne, JoinColumn } from "typeorm";
 import { BaseEntity } from "../shared/db/baseEntity.js";
-import { Person } from "../entities/Person";
+import { Person } from "../person/person.entity.js";
 import { Property } from "../property/property.entity.js";
 
 @Entity()

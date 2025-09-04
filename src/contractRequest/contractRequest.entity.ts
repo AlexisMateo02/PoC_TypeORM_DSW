@@ -1,6 +1,6 @@
 import { Entity, Column, ManyToOne, OneToMany, JoinColumn } from "typeorm";
 import { BaseEntity } from "../shared/db/baseEntity.js";
-import { Person } from "../entities/Person";
+import { Person } from "../person/person.entity.js";
 import { AssignedAgent } from "../assignedAgent/assignedAgent.entity.js";
 import { Warranty } from '../warranty/warranty.entity.js'
 import { Payment } from "../payment/payment.entity.js";

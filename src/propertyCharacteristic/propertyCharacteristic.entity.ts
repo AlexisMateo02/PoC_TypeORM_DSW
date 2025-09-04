@@ -2,7 +2,7 @@ import { Entity, Column, ManyToOne, JoinColumn, PrimaryColumn } from 'typeorm'
 import { Characteristic } from '../characteristic/characteristic.entity.js'
 import { Property } from '../property/property.entity.js'
 
-@Entity('property_characteristic')
+@Entity()
 export class PropertyCharacteristic {
   @PrimaryColumn({ type: 'int', unsigned: true })
   characteristicId!: number

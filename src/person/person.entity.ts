@@ -6,7 +6,7 @@ import { PropertyOwner } from '../propertyOwner/propertyOwner.entity.js'
 import { ContractRequest } from '../contractRequest/contractRequest.entity.js'
 import { Visit } from '../visit/visit.entity.js'
 
-@Entity('persona')
+@Entity()
 export class Person extends BaseEntity {
   @Column({ type: 'varchar', length: 45, nullable: false })
   documentType!: string
