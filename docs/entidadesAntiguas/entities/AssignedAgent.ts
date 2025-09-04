@@ -1,4 +1,5 @@
-import { Entity, PrimaryColumn, Column, ManyToOne, JoinColumn, BaseEntity } from "typeorm";
+import { Entity, PrimaryColumn, Column, ManyToOne, JoinColumn } from "typeorm";
+import { BaseEntity } from "../shared/db/baseEntity.js";
 import { Person } from "./Person";
 import { Property } from "./Property";
 

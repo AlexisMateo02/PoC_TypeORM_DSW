@@ -1,10 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, BaseEntity, OneToMany, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, OneToMany, Column } from "typeorm";
+import { BaseEntity } from "../shared/db/baseEntity.js";
 import { PersonBase } from "./PersonBase";
 import { AgentDetails } from "./AgentDetails";
 import { OwnerDetails } from "./OwnerDetails";
-import { AssignedAgent } from "./AssignedAgent";
-import { ContractRequest } from "./ContractRequest";
-import { PropertyOwner } from "./PropertyOwner";
+import { AssignedAgent } from "../assignedAgent/assignedAgent.entity.js";
+import { ContractRequest } from "../contractRequest/contractRequest.entity";
+import { PropertyOwner } from "../propertyOwner/propertyOwner.entity";
 
 @Entity()
 export class Person extends BaseEntity {

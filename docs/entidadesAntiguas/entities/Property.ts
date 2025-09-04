@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToMany } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { BaseEntity } from "../shared/db/baseEntity.js";
 import { AssignedAgent } from "./AssignedAgent";
 import { ContractRequest } from "./ContractRequest";
 import { PropertyOwner } from "./PropertyOwner";
