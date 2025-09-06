@@ -1,0 +1,71 @@
+### GET ALL 
+### Obtener todas las etiquetas
+GET http://localhost:3000/api/tags
+
+### GET ONE
+### Obtener una etiqueta
+GET http://localhost:3000/api/tags/{{id}}
+
+### POST
+### Crear una nueva etiqueta
+POST http://localhost:3000/api/tags
+Content-Type: application/json
+
+{
+    "name": "Sin TACC",
+    "color": "#FF6B6B",
+    "description": "Productos libres de gluten, aptos para celíacos."
+}
+
+### POST2
+# @name createTag
+POST http://localhost:3000/api/tags
+Content-Type: application/json
+
+{
+    "name": "Vegano",
+    "color": "#4ECDC4",
+    "description": "Productos sin ingredientes de origen animal."
+}
+
+### POST TAG TO UPDATE
+# @name createTagToUpdate
+POST http://localhost:3000/api/tags
+Content-Type: application/json
+
+{
+    "name": "Orgánico",
+    "color": "#45B7D1",
+    "description": "Productos cultivados sin pesticidas ni químicos."
+}
+
+### POST TAG TO DELETE
+# @name createTagToDelete
+POST http://localhost:3000/api/tags
+Content-Type: application/json
+
+{
+    "name": "Keto",
+    "color": "#96CEB4",
+    "description": "Productos bajos en carbohidratos."
+}
+
+### PUT
+### Modificar una etiqueta
+PUT http://localhost:3000/api/tags/{{idToUpdate}}
+Content-Type: application/json
+
+{
+    "name": "Orgánico Certificado",
+    "color": "#2ECC71",
+    "description": "Productos cultivados sin pesticidas ni químicos artificiales, con certificación orgánica oficial."
+}
+
+### DELETE
+### Borrar una etiqueta
+DELETE http://localhost:3000/api/tags/{{idToDelete}}
+
+### IDs
+@id = {{createTag.response.body.data.id}}
+@idToUpdate = {{createTagToUpdate.response.body.data.id}}
+@idToDelete = {{createTagToDelete.response.body.data.id}}

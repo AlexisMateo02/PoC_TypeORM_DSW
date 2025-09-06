@@ -6,9 +6,13 @@ dotenv.config()
 
 export const orm = new DataSource({
 	//TODO: Configuración básica del ORM
-	entities: ['dist/**/*.entity.js'],
 	type: 'mysql',
-	url: `mysql://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`,
+	host: process.env.DB_HOST,
+	port: Number(process.env.DB_PORT),
+	username: process.env.DB_USER,
+	password: process.env.DB_PASSWORD,
+	database: process.env.DB_NAME,
+	entities: ['dist/**/*.entity.js'],
 	logger: 'advanced-console',
 	logging: true,
 	//TODO Configuración del ORM para generar el esquema en la BD

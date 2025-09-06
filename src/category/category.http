@@ -1,0 +1,66 @@
+### GET ALL 
+### Obtener todas las categorías
+GET http://localhost:3000/api/categories
+
+### GET ONE
+### Obtener una categoría
+GET http://localhost:3000/api/categories/{{id}}
+
+### POST
+### Crear una nueva categoría
+POST http://localhost:3000/api/categories
+Content-Type: application/json
+
+{
+    "name": "Lácteos",
+    "description": "Productos derivados de la leche como yogures, quesos y manteca."
+}
+
+### POST2
+# @name createCategory
+POST http://localhost:3000/api/categories
+Content-Type: application/json
+
+{
+    "name": "Panadería",
+    "description": "Productos de panadería frescos como pan, facturas y masas."
+}
+
+### POST CATEGORY TO UPDATE
+# @name createCategoryToUpdate
+POST http://localhost:3000/api/categories
+Content-Type: application/json
+
+{
+    "name": "Limpieza",
+    "description": "Productos de limpieza para el hogar."
+}
+
+### POST CATEGORY TO DELETE
+# @name createCategoryToDelete
+POST http://localhost:3000/api/categories
+Content-Type: application/json
+
+{
+    "name": "Bebidas",
+    "description": "Bebidas alcohólicas y no alcohólicas."
+}
+
+### PUT
+### Modificar una categoría
+PUT http://localhost:3000/api/categories/{{idToUpdate}}
+Content-Type: application/json
+
+{
+    "name": "Limpieza e Higiene",
+    "description": "Productos de limpieza para el hogar e higiene personal como detergentes, desinfectantes y artículos de tocador."
+}
+
+### DELETE
+### Borrar una categoría
+DELETE http://localhost:3000/api/categories/{{idToDelete}}
+
+### IDs
+@id = {{createCategory.response.body.data.id}}
+@idToUpdate = {{createCategoryToUpdate.response.body.data.id}}
+@idToDelete = {{createCategoryToDelete.response.body.data.id}}

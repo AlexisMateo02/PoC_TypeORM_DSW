@@ -1,7 +1,6 @@
 import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
 
-// Cargar las variables de entorno del archivo .env
 dotenv.config();
 
 const setupDatabase = async () => {

@@ -1,13 +1,13 @@
 import { Request, Response } from 'express'
 import { orm } from '../shared/db/orm.js'
-import { Item } from '../item/item.entity.js'
+import { Tag } from './tag.entity.js'
 
 const em = orm.manager
 
 async function findAll(req: Request, res: Response) {
 	try {
-		const items = await em.find(Item)
-		res.status(200).json({ message: 'Found all items', data: items })
+		const tags = await em.find(Tag)
+		res.status(200).json({ message: 'Found all tags', data: tags })
 	} catch (error: any) {
 		res.status(500).json({ message: error.message })
 	}
@@ -16,8 +16,8 @@ async function findAll(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
 	try {
 		const id = Number.parseInt(req.params.id)
-		const item = await em.findOneOrFail(Item, { where: { id } })
-		res.status(200).json({ message: 'Found item', data: item })
+		const tag = await em.findOneOrFail(Tag, { where: { id } })
+		res.status(200).json({ message: 'Found tag', data: tag })
 	} catch (error: any) {
 		res.status(500).json({ message: error.message })
 	}
@@ -26,9 +26,9 @@ async function findOne(req: Request, res: Response) {
 //! TypeORM: create + save (MikroORM: create + flush)
 async function add(req: Request, res: Response) {
 	try {
-		const item = em.create(Item, req.body)
-		await em.save(item)
-		res.status(201).json({ message: 'Item created', data: item })
+		const tag = em.create(Tag, req.body)
+		await em.save(tag)
+		res.status(201).json({ message: 'Tag created', data: tag })
 	} catch (error: any) {
 		res.status(500).json({ message: error.message })
 	}
@@ -38,10 +38,10 @@ async function add(req: Request, res: Response) {
 async function update(req: Request, res: Response) {
 	try {
 		const id = Number.parseInt(req.params.id)
-		const item = await em.findOneOrFail(Item, { where: { id } })
-		em.merge(Item, item, req.body)
-		await em.save(item)
-		res.status(200).json({ message: 'Item updated' })
+		const tag = await em.findOneOrFail(Tag, { where: { id } })
+		em.merge(Tag, tag, req.body)
+		await em.save(tag)
+		res.status(200).json({ message: 'Tag updated' })
 	} catch (error: any) {
 		res.status(500).json({ message: error.message })
 	}
@@ -51,14 +51,14 @@ async function update(req: Request, res: Response) {
 async function remove(req: Request, res: Response) {
 	try {
 		const id = Number.parseInt(req.params.id)
-		await em.delete(Item, { id })
-		res.status(200).json({ message: 'Item deleted' })
+		await em.delete(Tag, { id })
+		res.status(200).json({ message: 'Tag deleted' })
 	} catch (error: any) {
 		res.status(500).json({ message: error.message })
 	}
 }
 
-export const controllerItem = {
+export const controllerTag = {
 	findAll,
 	findOne,
 	add,
