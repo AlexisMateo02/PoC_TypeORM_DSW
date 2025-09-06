@@ -38,11 +38,28 @@ const setupDatabase = async () => {
     console.error('❌ Error configurando la base de datos:');
     console.error(error.message);
 
-    // Mostrar ayuda según el tipo de error
-    if (error.code === 'ER_ACCESS_DENIED_ERROR') {
-      console.log('\nVerifica que:');
-      console.log('   - El usuario y contraseña de root en .env sean correctos');
-      console.log('   - MySQL esté ejecutándose');
+    switch (error.code) {
+      case 'ER_ACCESS_DENIED_ERROR':
+        console.log('\nVerifica que:');
+        console.log('   - El usuario y contraseña de root en .env sean correctos');
+        console.log('   - MySQL esté ejecutándose');
+        break;
+      case 'ECONNREFUSED':
+        console.log('\nNo se pudo conectar al servidor MySQL:');
+        console.log('   - Verifica que MySQL esté ejecutándose');
+        console.log(`   - Verifica que el puerto ${process.env.DB_PORT || 3306} esté disponible`);
+        console.log('   - Verifica que la dirección del host sea correcta');
+        break;
+      case 'ER_NOT_SUPPORTED_AUTH_MODE':
+        console.log('\nProblema de autenticación:');
+        console.log('   - El método de autenticación no es compatible');
+        console.log('   - Puede que necesites actualizar la contraseña del usuario usando ALTER USER');
+        break;
+      default:
+        console.log('\nVerifica que:');
+        console.log('   - Todas las variables de entorno en .env estén configuradas');
+        console.log('   - Tengas los permisos necesarios en MySQL');
+        console.log('   - La conexión a la base de datos sea estable');
     }
 
     process.exit(1);
