@@ -1,13 +1,13 @@
 import { Request, Response } from 'express'
-import { orm } from '../shared/db/orm.js'
+import { AppDataSource } from '../shared/db/orm.js'
 import { Category } from './category.entity.js'
 
-const em = orm.manager
+const em = AppDataSource.manager
 
 async function findAll(req: Request, res: Response) {
 	try {
 		const categories = await em.find(Category)
-		res.status(200).json({ message: 'Found all categories', data: categories })
+		res.status(200).json({ message: 'All categories found', data: categories })
 	} catch (error: any) {
 		res.status(500).json({ message: error.message })
 	}
@@ -17,7 +17,7 @@ async function findOne(req: Request, res: Response) {
 	try {
 		const id = Number.parseInt(req.params.id)
 		const category = await em.findOneOrFail(Category, { where: { id } })
-		res.status(200).json({ message: 'Found category', data: category })
+		res.status(200).json({ message: 'Category found', data: category })
 	} catch (error: any) {
 		res.status(500).json({ message: error.message })
 	}

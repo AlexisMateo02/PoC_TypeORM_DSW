@@ -1,25 +1,34 @@
-import { Request, Response } from 'express'
-import { orm } from '../shared/db/orm.js'
+import { Request, Response, NextFunction} from 'express'
+import { error, success } from '../shared/errors/httpResponses.js'
+import { AppDataSource } from '../shared/db/orm.js'
 import { Tag } from './tag.entity.js'
 
-const em = orm.manager
+const em = AppDataSource.manager
 
 async function findAll(req: Request, res: Response) {
 	try {
 		const tags = await em.find(Tag)
-		res.status(200).json({ message: 'Found all tags', data: tags })
-	} catch (error: any) {
-		res.status(500).json({ message: error.message })
+		return success.Ok(res, 'All tags found successfully', tags)
+	} catch (err: any) {
+		console.error('Error fetching tags:', err)
+		return error.InternalServerError(res, 'Failed to retrieve tags')
 	}
 }
 
 async function findOne(req: Request, res: Response) {
 	try {
 		const id = Number.parseInt(req.params.id)
-		const tag = await em.findOneOrFail(Tag, { where: { id } })
-		res.status(200).json({ message: 'Found tag', data: tag })
-	} catch (error: any) {
-		res.status(500).json({ message: error.message })
+		if (!req.params.id || isNaN(id) || id <= 0) {
+			return error.BadRequest(res, 'Invalid tag ID provided')
+		}
+		const tag = await em.findOne(Tag, { where: { id } })
+		if (!tag) {
+      return error.NotFound(res, `Tag with ID ${id} not found`)
+    }
+		return success.Ok(res, 'Tag found successfully', tag)
+	} catch (err: any) {
+		console.error('Error fetching tag:', err)
+		return error.InternalServerError(res, 'Failed to retrieve tag')
 	}
 }
 
@@ -28,9 +37,10 @@ async function add(req: Request, res: Response) {
 	try {
 		const tag = em.create(Tag, req.body)
 		await em.save(tag)
-		res.status(201).json({ message: 'Tag created', data: tag })
-	} catch (error: any) {
-		res.status(500).json({ message: error.message })
+		return success.Created(res, 'Tag created successfully', tag)
+	} catch (err: any) {
+		console.error('Error fetching tags:', err)
+		return error.InternalServerError(res, 'Failed to create tags')
 	}
 }
 
@@ -38,12 +48,15 @@ async function add(req: Request, res: Response) {
 async function update(req: Request, res: Response) {
 	try {
 		const id = Number.parseInt(req.params.id)
+		if (isNaN(id) || id <= 0) {
+			return error.BadRequest(res, 'Invalid ID')
+		}
 		const tag = await em.findOneOrFail(Tag, { where: { id } })
 		em.merge(Tag, tag, req.body)
 		await em.save(tag)
-		res.status(200).json({ message: 'Tag updated' })
-	} catch (error: any) {
-		res.status(500).json({ message: error.message })
+		return success.Ok(res, 'Tag found', tag)
+	} catch (err: any) {
+		return error.InternalServerError(res, err.message)
 	}
 }
 
@@ -51,10 +64,13 @@ async function update(req: Request, res: Response) {
 async function remove(req: Request, res: Response) {
 	try {
 		const id = Number.parseInt(req.params.id)
+		if (isNaN(id) || id <= 0) {
+			return error.BadRequest(res, 'Invalid ID')
+		}
 		await em.delete(Tag, { id })
-		res.status(200).json({ message: 'Tag deleted' })
-	} catch (error: any) {
-		res.status(500).json({ message: error.message })
+		return success.Ok(res, 'Tag deleted')
+	} catch (err: any) {
+		return error.InternalServerError(res, err.message)
 	}
 }
 
@@ -65,3 +81,4 @@ export const controllerTag = {
 	update,
 	remove,
 }
+

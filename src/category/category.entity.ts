@@ -1,5 +1,5 @@
 import { Entity, Column, OneToMany } from 'typeorm'
-import { BaseEntity } from '../shared/db/baseEntity.js'
+import { BaseEntity } from '../shared/db/baseEntity.entity.js'
 import { Product } from '../product/product.entity.js'
 
 @Entity()

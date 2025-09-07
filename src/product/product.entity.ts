@@ -1,5 +1,5 @@
 import { Entity, Column, ManyToOne, ManyToMany, JoinTable, JoinColumn } from 'typeorm'
-import { BaseEntity } from '../shared/db/baseEntity.js'
+import { BaseEntity } from '../shared/db/baseEntity.entity.js'
 import { Category } from '../category/category.entity.js'
 import { Tag } from '../tag/tag.entity.js'
 
@@ -17,15 +17,15 @@ export class Product extends BaseEntity {
 	@Column('int', { nullable: false })
 	stock!: number
 
-	@ManyToOne(() => Category, { nullable: false, eager: false })
-	@JoinColumn({ name: 'categoryId' })
+	@ManyToOne(() => Category, category => category.products, { nullable: false })
+	@JoinColumn({ name: 'category_id' })
 	category!: Category
 
 	@ManyToMany(() => Tag, tag => tag.products)
 	@JoinTable({
 		name: 'product_tags',
-		joinColumn: { name: 'productId', referencedColumnName: 'id' },
-		inverseJoinColumn: { name: 'tagId', referencedColumnName: 'id' },
+		joinColumn: { name: 'product_id', referencedColumnName: 'id' },
+		inverseJoinColumn: { name: 'tag_id', referencedColumnName: 'id' },
 	})
 	tags!: Tag[]
 }

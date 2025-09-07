@@ -54,6 +54,9 @@ DB_PORT=3306
 DB_USER=dsw
 DB_PASSWORD=dsw
 DB_NAME=poctypeorm2025
+
+# Configuración del servidor
+PORT=3000
 ```
 
 **⚠️ Importante:** Reemplaza `tu_password_root_aquí` con la contraseña real de tu usuario `root` de MySQL.

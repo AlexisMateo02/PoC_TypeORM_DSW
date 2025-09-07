@@ -1,33 +1,54 @@
-import mysql from 'mysql2/promise';
+import mysql, { Connection } from 'mysql2/promise';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-const setupDatabase = async () => {
-  let connection;
+interface DataBaseConfig {
+  host: string;
+  port: number;
+  user: string | undefined;
+  password: string | undefined;
+}
+
+interface DataBaseError extends Error {
+  code?: string;
+}
+
+const setupDataBase = async (): Promise<void> => {
+  let connection: Connection | null = null;
 
   try {
     console.log('Conectando a MySQL como administrador...');
 
-    connection = await mysql.createConnection({
+    const config: DataBaseConfig = {
       host: process.env.DB_HOST || 'localhost',
-      port: parseInt(process.env.DB_PORT) || 3306,
+      port: parseInt(process.env.DB_PORT || '3306', 10),
       user: process.env.MYSQL_ROOT_USER,
       password: process.env.MYSQL_ROOT_PASSWORD
-    });
+    };
+
+    connection = await mysql.createConnection(config);
 
     console.log('Conexión establecida');
 
-    await connection.execute(`CREATE DATABASE IF NOT EXISTS ${process.env.DB_NAME}`);
-    console.log(`Base de datos "${process.env.DB_NAME}" creada/verificada`);
+    const dbName: string | undefined = process.env.DB_NAME;
+    const dbUser: string | undefined = process.env.DB_USER;
+    const dbPassword: string | undefined = process.env.DB_PASSWORD;
+
+    if (!dbName || !dbUser || !dbPassword) {
+      throw new Error('Variables de entorno requeridas no están definidas: DB_NAME, DB_USER, DB_PASSWORD');
+    }
+
+    await connection.execute(`CREATE DATABASE IF NOT EXISTS ${dbName}`);
+    console.log(`Base de datos "${dbName}" creada/verificada`);
 
     await connection.execute(
-      `CREATE USER IF NOT EXISTS '${process.env.DB_USER}'@'%' IDENTIFIED BY '${process.env.DB_PASSWORD}'`
+      `CREATE USER IF NOT EXISTS '${dbUser}'@'%' IDENTIFIED BY '${dbPassword}'`
     );
-    console.log(`Usuario "${process.env.DB_USER}" creado/verificado`);
+    console.log(`Usuario "${dbUser}" creado/verificado`);
 
-    await connection.execute(`GRANT ALL ON ${process.env.DB_NAME}.* TO ${process.env.DB_USER}@'%'`);
-    console.log(`Permisos otorgados al usuario "${process.env.DB_USER}"`);
+    await connection.execute(`GRANT ALL ON ${dbName}.* TO ${dbUser}@'%'`);
+    console.log(`Permisos otorgados al usuario "${dbUser}"`);
 
     await connection.execute('FLUSH PRIVILEGES');
     console.log('Privilegios actualizados');
@@ -35,10 +56,12 @@ const setupDatabase = async () => {
     console.log('✅ Configuración de base de datos completada exitosamente');
 
   } catch (error) {
+    const dbError = error as DataBaseError;
+    
     console.error('❌ Error configurando la base de datos:');
-    console.error(error.message);
+    console.error(dbError.message);
 
-    switch (error.code) {
+    switch (dbError.code) {
       case 'ER_ACCESS_DENIED_ERROR':
         console.log('\nVerifica que:');
         console.log('   - El usuario y contraseña de root en .env sean correctos');
@@ -71,4 +94,4 @@ const setupDatabase = async () => {
   }
 };
 
-setupDatabase();
+setupDataBase();
