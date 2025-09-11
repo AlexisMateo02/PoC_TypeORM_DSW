@@ -11,7 +11,7 @@ async function findAll(req: Request, res: Response) {
 		return success.Ok(res, 'All tags found successfully', tags)
 	} catch (err: any) {
 		console.error('Error fetching tags:', err)
-		return error.InternalServerError(res, 'Failed to retrieve tags')
+		return error.InternalServerError(res, 'Failed to find tags')
 	}
 }
 
@@ -19,7 +19,7 @@ async function findOne(req: Request, res: Response) {
 	try {
 		const id = Number.parseInt(req.params.id)
 		if (!req.params.id || isNaN(id) || id <= 0) {
-			return error.BadRequest(res, 'Invalid tag ID provided')
+			return error.BadRequest(res, 'Invalid tag ID')
 		}
 		const tag = await em.findOne(Tag, { where: { id } })
 		if (!tag) {
@@ -28,7 +28,7 @@ async function findOne(req: Request, res: Response) {
 		return success.Ok(res, 'Tag found successfully', tag)
 	} catch (err: any) {
 		console.error('Error fetching tag:', err)
-		return error.InternalServerError(res, 'Failed to retrieve tag')
+		return error.InternalServerError(res, 'Failed to find tag')
 	}
 }
 
@@ -39,8 +39,8 @@ async function add(req: Request, res: Response) {
 		await em.save(tag)
 		return success.Created(res, 'Tag created successfully', tag)
 	} catch (err: any) {
-		console.error('Error fetching tags:', err)
-		return error.InternalServerError(res, 'Failed to create tags')
+		console.error('Error creating tag:', err)
+		return error.InternalServerError(res, 'Failed to create tag')
 	}
 }
 

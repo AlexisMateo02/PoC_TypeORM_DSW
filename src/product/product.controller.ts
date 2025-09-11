@@ -7,24 +7,6 @@ import { Tag } from '../tag/tag.entity.js'
 
 const em = AppDataSource.manager
 
-function sanitizeProductInput(req: Request, res: Response, next: NextFunction) {
-	req.body.sanitizedInput = {
-		name: req.body.name,
-		description: req.body.description,
-		price: req.body.price,
-		stock: req.body.stock,
-		category: req.body.category,
-		tags: req.body.tags,
-	}
-	//more checks here
-	Object.keys(req.body.sanitizedInput).forEach(key => {
-		if (req.body.sanitizedInput[key] === undefined) {
-			delete req.body.sanitizedInput[key]
-		}
-	})
-	next()
-}
-
 async function findAll(req: Request, res: Response) {
 	try {
 		const products = await em.find(Product, { relations: ['category', 'tags'] })
@@ -110,7 +92,6 @@ async function remove(req: Request, res: Response) {
 }
 
 export const controllerProduct = {
-	sanitizeProductInput,
 	findAll,
 	findOne,
 	add,
