@@ -1,9 +1,11 @@
-import { Request, Response, NextFunction } from 'express'
+import { Request, Response } from 'express'
 import { AppDataSource } from '../shared/db/orm.js'
 import { In } from 'typeorm'
+import { error, success } from '../shared/errors/httpResponses.js'
 import { Product } from './product.entity.js'
 import { Category } from '../category/category.entity.js'
 import { Tag } from '../tag/tag.entity.js'
+import { createProduct } from './product.service.js'
 
 const em = AppDataSource.manager
 
@@ -28,28 +30,20 @@ async function findOne(req: Request, res: Response) {
 
 //! TypeORM: create + save (MikroORM: create + flush)
 async function add(req: Request, res: Response) {
-	try {
-		const { category: categoryId, tags: tagIds, ...productData } = req.body.sanitizedInput
-		const product = em.create(Product, productData)
-		if (categoryId !== undefined) {
-			const category = await em.findOne(Category, { where: { id: categoryId } })
-			if (!category) {
-				return res.status(400).json({ message: 'Category not found' })
-			}
-			product.category = category
-		}
-		if (tagIds !== undefined && Array.isArray(tagIds)) {
-			const tags = await em.findBy(Tag, { id: In(tagIds) })
-			if (tags.length !== tagIds.length) {
-				return res.status(400).json({ message: 'Some tags not found' })
-			}
-			product.tags = tags
-		}
-		await em.save(product)
-		res.status(201).json({ message: 'Product created', data: product })
-	} catch (error: any) {
-		res.status(500).json({ message: error.message })
-	}
+  try {
+    const productData = req.body.sanitizedInput
+    const product = await createProduct(productData)
+    return success.Created(res, 'Product created successfully', product)
+  } catch (err: any) {
+    if (err.message === 'Category not found') {
+      return error.NotFound(res, err.message)
+    }
+    if (err.message.includes('Tags not found')) {
+      return error.NotFound(res, err.message)
+    }
+    console.error('Error creating product:', err)
+    return error.InternalServerError(res, 'Failed to create product')
+  }
 }
 
 //! TypeORM: findOneOrFail + merge + save (MikroORM: findOneOrFail + assign + flush)
