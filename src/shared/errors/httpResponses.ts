@@ -8,6 +8,7 @@ enum HttpStatus {
   UNAUTHORIZED = 401,
   FORBIDDEN = 403,
   NOT_FOUND = 404,
+  DUPLICATE_ENTRY = 409,
   INTERNAL_SERVER_ERROR = 500,
 }
 
@@ -21,8 +22,7 @@ const Created = (res: Response, message: string, data?: any) => {
 }
 
 const NoContent = (res: Response, message: string) => {
-  //res.status(HttpStatus.NO_CONTENT).json({ status: HttpStatus.NO_CONTENT, message })
-  res.status(HttpStatus.NO_CONTENT).end()
+  res.status(HttpStatus.NO_CONTENT).json({ status: HttpStatus.NO_CONTENT, message })
 }
 
 //! Error Responses
@@ -42,6 +42,10 @@ const NotFound = (res: Response, message: string = 'Resource not found') => {
   res.status(HttpStatus.NOT_FOUND).json({ status: HttpStatus.NOT_FOUND, message })
 }
 
+const DuplicateEntry = (res: Response, message: string = 'Duplicate entry') => {
+  res.status(HttpStatus.DUPLICATE_ENTRY).json({ status: HttpStatus.DUPLICATE_ENTRY, message })
+}
+
 const InternalServerError = (res: Response, message: string = 'Internal server error') => {
   res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ status: HttpStatus.INTERNAL_SERVER_ERROR, message })
 }
@@ -57,5 +61,6 @@ export const error = {
   Unauthorized,
   Forbidden,
   NotFound,
+  DuplicateEntry,
   InternalServerError
 }

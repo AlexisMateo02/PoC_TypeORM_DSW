@@ -1,7 +1,6 @@
 import { Request, Response } from 'express'
 import { AppDataSource } from '../shared/db/orm.js'
 import { error, success } from '../shared/errors/httpResponses.js'
-import { Product } from './product.entity.js'
 import { getAllProducts, createProduct, getProductById, updateProduct, deleteProduct } from './product.service.js'
 
 const em = AppDataSource.manager
@@ -33,13 +32,15 @@ async function findOne(req: Request, res: Response) {
   }
 }
 
-//! TypeORM: create + save (MikroORM: create + flush)
 async function add(req: Request, res: Response) {
   try {
     const productData = req.body.sanitizedInput
     const product = await createProduct(productData)
     return success.Created(res, 'Product created successfully', product)
   } catch (err: any) {
+    if (err.message.includes('already exists')){
+      return error.DuplicateEntry(res, err.message)
+    }
     if (err.message === 'Category not found') {
       return error.NotFound(res, err.message)
     }
@@ -51,13 +52,15 @@ async function add(req: Request, res: Response) {
   }
 }
 
-//! TypeORM: findOneOrFail + merge + save (MikroORM: findOneOrFail + assign + flush)
 async function update(req: Request, res: Response) {
   try {
     const id = Number.parseInt(req.params.id)
     const product = await updateProduct(id, req.body.sanitizedInput)
     return success.Ok(res, 'Product updated successfully', product)
   } catch (err: any) {
+    if (err.message.includes('already exists')){
+      return error.DuplicateEntry(res, err.message)
+    }
     if (err.message === 'Invalid product ID') {
       return error.BadRequest(res, err.message)
     }
@@ -69,12 +72,11 @@ async function update(req: Request, res: Response) {
   }
 }
 
-//! TypeORM: delete directo por ID (MikroORM: getReference + removeAndFlush (remove + flush))
 async function remove(req: Request, res: Response) {
   try {
     const id = Number.parseInt(req.params.id)
     await deleteProduct(id)
-    return success.Ok(res, 'Product deleted successfully')
+    return success.NoContent(res, 'Product deleted successfully')
   } catch (err: any) {
     if (err.message === 'Invalid product ID') {
       return error.BadRequest(res, err.message)
