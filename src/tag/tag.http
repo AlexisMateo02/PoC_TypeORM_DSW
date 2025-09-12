@@ -4,7 +4,7 @@ GET http://localhost:3000/api/tags
 
 ### GET ONE
 ### Obtener una etiqueta
-GET http://localhost:3000/api/tags/5
+GET http://localhost:3000/api/tags/{{id}}
 
 ### POST
 ### Crear una nueva etiqueta

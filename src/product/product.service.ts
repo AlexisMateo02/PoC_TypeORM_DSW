@@ -30,10 +30,12 @@ function validateId(id: number): void {
   }
 }
 
+//! TypeORM: find
 async function getAllProducts() {
   return await em.find(Product, { relations: ['category', 'tags'] })
 }
 
+//! TypeORM: findOne
 async function getProductById(id: number) {
   validateId(id)
   const product = await em.findOne(Product, { 
@@ -46,11 +48,10 @@ async function getProductById(id: number) {
   return product
 }
 
+//! TypeORM: create + save
 async function createProduct(productData: ProductCreateData) {
   const { category: categoryId, tags: tagIds, ...productFields } = productData
-  
   const product = em.create(Product, productFields)
-  
   const category = await em.findOne(Category, { where: { id: categoryId } })
   if (!category) {
     throw new Error('Category not found')
@@ -82,6 +83,7 @@ async function createProduct(productData: ProductCreateData) {
   })
 }
 
+//! TypeORM: findOne + merge + save
 async function updateProduct(id: number, productData: ProductUpdateData) {
   const { category: categoryId, tags: tagIds, ...productFields } = productData
   const product = await getProductById(id)
@@ -115,6 +117,7 @@ async function updateProduct(id: number, productData: ProductUpdateData) {
   })
 }
 
+//! TypeORM: delete directo por ID
 async function deleteProduct(id: number) {
   await getProductById(id)
   await em.delete(Product, { id })

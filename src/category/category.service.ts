@@ -19,10 +19,12 @@ function validateId(id: number): void {
   }
 }
 
+//! TypeORM: find
 async function getAllCategories() {
   return await em.find(Category)
 }
 
+//! TypeORM: findOne
 async function getCategoryById(id: number) {
   validateId(id)
   const category = await em.findOne(Category, { where: { id } })
@@ -32,6 +34,7 @@ async function getCategoryById(id: number) {
   return category
 }
 
+//! TypeORM: create + save
 async function createCategory(categoryData: CategoryCreateData) {
   const category = em.create(Category, categoryData)
   const existingCategory = await em.findOne(Category, {
@@ -44,6 +47,7 @@ async function createCategory(categoryData: CategoryCreateData) {
   return await em.findOne(Category, { where: { id: category.id } })
 }
 
+//! TypeORM: findOne + merge + save
 async function updateCategory(id: number, categoryData: CategoryUpdateData) {
   const category = await getCategoryById(id)
   if (categoryData.name && categoryData.name !== category.name) {
@@ -57,6 +61,7 @@ async function updateCategory(id: number, categoryData: CategoryUpdateData) {
   return await em.findOne(Category, { where: { id: category.id } })
 }
 
+//! TypeORM: delete directo por ID
 async function deleteCategory(id: number) {
   await getCategoryById(id)
   await em.delete(Category, { id })

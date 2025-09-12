@@ -1,9 +1,6 @@
 import { Request, Response } from 'express'
-import { AppDataSource } from '../shared/db/orm.js'
 import { error, success } from '../shared/errors/httpResponses.js'
 import { getAllProducts, createProduct, getProductById, updateProduct, deleteProduct } from './product.service.js'
-
-const em = AppDataSource.manager
 
 async function findAll(req: Request, res: Response) {
   try {
