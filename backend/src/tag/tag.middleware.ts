@@ -4,7 +4,7 @@ import { error } from '../shared/errors/httpResponses.js'
 function sanitizeTagInput(req: Request, res: Response, next: NextFunction) {
 	req.body.sanitizedInput = {
 		name: typeof req.body.name === 'string' ? req.body.name.trim() : undefined,
-		color: typeof req.body.color === 'string' ? req.body.color.trim().toUpperCase() : req.body.color === null ? null : undefined,
+		color: typeof req.body.color === 'string' ? req.body.color.trim().toUpperCase() : undefined,
 		description: typeof req.body.description === 'string' ? req.body.description.trim() : req.body.description === null ? null : undefined,
 	}
 	Object.keys(req.body.sanitizedInput).forEach(key => {

@@ -8,7 +8,7 @@ export class Tag extends BaseEntity {
 	name!: string
 
 	@Column({ nullable: true })
-	color?: string // Hexadecimal color code: #FF5733
+	color!: string // Hexadecimal color code: #FF5733
 
 	@Column({ nullable: true })
 	description?: string

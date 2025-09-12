@@ -17,7 +17,10 @@ const app: express.Application = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(morgan('dev'))
-app.use(cors())
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:3001',
+  credentials: true,
+}))
 
 //TODO: TypeORM no necesita el equivalente al RequestContext.create de MikroORM
 //TODO: TypeORM maneja las conexiones internamente

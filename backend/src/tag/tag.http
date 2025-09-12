@@ -13,7 +13,6 @@ Content-Type: application/json
 
 {
     "name": "Sin TACC",
-    "color": "#FF6B6B",
     "description": "Productos libres de gluten, aptos para celíacos."
 }
 
