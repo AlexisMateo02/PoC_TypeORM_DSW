@@ -1,18 +1,18 @@
 # coverage reports
-coverage
+backend/coverage
 
 # API keys and secrets
-.env
+backend/.env
 
 # dependency directory
-node_modules
+backend/node_modules
 
 # OS metadata
 .DS_Store
 Thumbs.db
 
 # ignore built ts files
-dist/**/*
+backend/dist/**/*
 
 # vscode
 .vscode/*

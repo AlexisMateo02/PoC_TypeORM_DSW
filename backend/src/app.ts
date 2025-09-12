@@ -9,7 +9,7 @@ import { categoryRouter } from './category/category.routes.js'
 import { tagRouter } from './tag/tag.routes.js'
 import { syncSchema } from './shared/db/orm.js'
 
-dotenv.config();
+dotenv.config()
 const port: number = Number(process.env.PORT) || 3000
 
 //! Middleware base que transforma el req.body a JSON

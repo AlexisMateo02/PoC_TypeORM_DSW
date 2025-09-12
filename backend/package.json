@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc -p ./tsconfig.json",
     "start:dev": "tsc-watch --noClear -p ./tsconfig.json --onSuccess \"node ./dist/app.js\"",
-    "db:setup": "pnpm build && node dist/shared/db/scripts/setupDataBase.js",
+    "db:setup": "pnpm build && node ./dist/shared/db/scripts/setupDataBase.js",
     "dev": "pnpm db:setup && pnpm start:dev"
   },
   "keywords": [],

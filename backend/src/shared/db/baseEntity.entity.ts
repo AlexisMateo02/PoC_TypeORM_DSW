@@ -1,7 +1,7 @@
 import { PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm'
 
 export abstract class BaseEntity {
-	@PrimaryGeneratedColumn("increment")
+	@PrimaryGeneratedColumn('increment')
 	id!: number
 
 	@CreateDateColumn()

@@ -1,7 +1,7 @@
 import 'reflect-metadata'
 import dotenv from 'dotenv'
 import { DataSource } from 'typeorm'
-import { SnakeNamingStrategy } from "typeorm-naming-strategies";
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
 
 dotenv.config()
 
@@ -19,7 +19,7 @@ export const AppDataSource = new DataSource({
 	namingStrategy: new SnakeNamingStrategy(),
 	//TODO Configuración del ORM para generar el esquema en la BD
 	//! Utilizar solo para el desarrollo; nunca en producción
-	synchronize: true
+	synchronize: true,
 })
 
 export const syncSchema = async () => {
