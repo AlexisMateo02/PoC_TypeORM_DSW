@@ -41,10 +41,7 @@ async function add(req: Request, res: Response) {
     if (err.message.includes('already exists')){
       return error.DuplicateEntry(res, err.message)
     }
-    if (err.message === 'Category not found') {
-      return error.NotFound(res, err.message)
-    }
-    if (err.message.includes('Tags not found')) {
+    if (err.message.includes('not found')) {
       return error.NotFound(res, err.message)
     }
     console.error('Error creating product:', err)

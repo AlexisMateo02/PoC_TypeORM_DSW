@@ -36,16 +36,13 @@ async function getAllProducts() {
 
 async function getProductById(id: number) {
   validateId(id)
-
   const product = await em.findOne(Product, { 
     where: { id }, 
     relations: ['category', 'tags'] 
   })
-
   if (!product) {
     throw new Error(`Product with ID ${id} not found`)
   }
-
   return product
 }
 
@@ -59,8 +56,6 @@ async function createProduct(productData: ProductCreateData) {
     throw new Error('Category not found')
   }
   product.category = category
-  
-  
   if (Array.isArray(tagIds)) {
     if (tagIds.length > 0) {
       const tags = await em.findBy(Tag, { id: In(tagIds) })
@@ -90,14 +85,6 @@ async function createProduct(productData: ProductCreateData) {
 async function updateProduct(id: number, productData: ProductUpdateData) {
   const { category: categoryId, tags: tagIds, ...productFields } = productData
   const product = await getProductById(id)
-  
-  if (Object.keys(productFields).length > 0) {
-      const fieldsToUpdate = Object.fromEntries(
-        Object.entries(productFields).filter(([_, value]) => value !== undefined)
-      )
-      em.merge(Product, product, fieldsToUpdate)
-    }
-
   if (categoryId !== undefined) {
     const category = await em.findOne(Category, { where: { id: categoryId } })
     if (!category) {
@@ -114,14 +101,14 @@ async function updateProduct(id: number, productData: ProductUpdateData) {
     }
     product.tags = tags
   }
-  const existingProduct = await em.findOne(Product, {
-    where: { name: productFields.name }
-  })
-  if (existingProduct) {
-    throw new Error(`Product with name '${productFields.name}' already exists`)
+  if (productFields.name && productFields.name !== productFields.name) {
+    const existingProduct = await em.findOne(Product, { where: { name: productFields.name } })
+    if (existingProduct) {
+      throw new Error(`Product with name '${productFields.name}' already exists`)
+    }
   }
+  em.merge(Product, product, productFields)
   await em.save(product)
-
   return await em.findOne(Product, { 
     where: { id: product.id }, 
     relations: ['category', 'tags'] 
@@ -129,16 +116,8 @@ async function updateProduct(id: number, productData: ProductUpdateData) {
 }
 
 async function deleteProduct(id: number) {
-  validateId(id)
-
   await getProductById(id)
-
-  const result = await em.delete(Product, { id })
-  
-  if (result.affected === 0) {
-    throw new Error(`Product with ID ${id} not found`)
-  }
-
+  await em.delete(Product, { id })
   return true
 }
 

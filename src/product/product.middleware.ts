@@ -19,6 +19,11 @@ function sanitizeProductInput(req: Request, res: Response, next: NextFunction) {
           .filter((tag: number | null): tag is number => tag !== null)
       : [],
   }
+  Object.keys(req.body.sanitizedInput).forEach((key) => {
+    if (req.body.sanitizedInput[key] === undefined) {
+      delete req.body.sanitizedInput[key]
+    }
+  })
   next()
 }
 
