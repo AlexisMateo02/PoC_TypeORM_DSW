@@ -1,29 +1,43 @@
-# coverage reports
+# ==================== BACKEND ====================
 backend/coverage
-
-# API keys and secrets
 backend/.env
-
-# dependency directory
 backend/node_modules
-
-# OS metadata
-.DS_Store
-Thumbs.db
-
-# ignore built ts files
 backend/dist/**/*
 
-# vscode
+# ==================== FRONTEND ====================
+frontend/node_modules
+frontend/dist
+frontend/dist-ssr
+frontend/*.local
+frontend/.vscode/*
+!frontend/.vscode/extensions.json
+frontend/coverage/
+
+# ==================== LOGS ====================
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ==================== EDITOR ====================
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
 !.vscode/*.code-snippets
+.idea
+.DS_Store
+Thumbs.db
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
-## local history for vscode
+# ==================== GENERAL ====================
 .history/
-
-## built vscode extensions
 *.vsix
