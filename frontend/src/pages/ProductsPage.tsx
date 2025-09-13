@@ -15,8 +15,8 @@ const ProductsPage: React.FC = () => {
     description: '',
     price: 0,
     stock: 0,
-    categoryId: '',
-    tagIds: [],
+    category: 0,
+    tags: [],
   });
 
   useEffect(() => {
@@ -47,6 +47,13 @@ const ProductsPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validar que category no sea 0 (valor por defecto)
+    if (!formData.category) {
+      setError('Por favor, seleccione una categoría.');
+      return;
+    }
+
     try {
       if (editingProduct) {
         await api.updateProduct(editingProduct.id.toString(), formData as UpdateProductDTO);
@@ -64,6 +71,7 @@ const ProductsPage: React.FC = () => {
   const handleDelete = async (id: string) => {
     if (window.confirm('¿Está seguro de que desea eliminar este producto?')) {
       try {
+        setError(null);
         await api.deleteProduct(id);
         await loadData();
       } catch (error) {
@@ -81,8 +89,8 @@ const ProductsPage: React.FC = () => {
         description: product.description || '',
         price: product.price,
         stock: product.stock,
-        categoryId: product.category.id.toString(),
-        tagIds: product.tags.map(tag => tag.id.toString()),
+        category: product.category.id,
+        tags: product.tags.map(tag => tag.id),
       });
     } else {
       setEditingProduct(null);
@@ -91,10 +99,11 @@ const ProductsPage: React.FC = () => {
         description: '',
         price: 0,
         stock: 0,
-        categoryId: '',
-        tagIds: [],
+        category: 0,
+        tags: [],
       });
     }
+    setError(null);
     setIsModalOpen(true);
   };
 
@@ -106,17 +115,18 @@ const ProductsPage: React.FC = () => {
       description: '',
       price: 0,
       stock: 0,
-      categoryId: '',
-      tagIds: [],
+      category: 0,
+      tags: [],
     });
+    setError(null);
   };
 
-  const handleTagToggle = (tagId: string) => {
-    const newTagIds = formData.tagIds.includes(tagId)
-      ? formData.tagIds.filter(id => id !== tagId)
-      : [...formData.tagIds, tagId];
+  const handleTagToggle = (tagId: number) => {
+    const newTagIds = formData.tags.includes(tagId)
+      ? formData.tags.filter(id => id !== tagId)
+      : [...formData.tags, tagId];
 
-    setFormData({ ...formData, tagIds: newTagIds });
+    setFormData({ ...formData, tags: newTagIds });
   };
 
   const formatPrice = (price: number) => {
@@ -134,29 +144,6 @@ const ProductsPage: React.FC = () => {
     return (
       <div className="flex justify-center items-center min-h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="bg-red-50 border border-red-200 rounded-md p-4">
-        <div className="flex">
-          <div className="ml-3">
-            <h3 className="text-sm font-medium text-red-800">Error</h3>
-            <div className="mt-2 text-sm text-red-700">
-              <p>{error}</p>
-            </div>
-            <div className="mt-4">
-              <button
-                onClick={loadData}
-                className="bg-red-100 px-2 py-1 rounded-md text-sm font-medium text-red-800 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-              >
-                Reintentar
-              </button>
-            </div>
-          </div>
-        </div>
       </div>
     );
   }
@@ -180,6 +167,28 @@ const ProductsPage: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {/* Mostrar error global fuera del modal */}
+      {error && !isModalOpen && (
+        <div className="bg-red-50 border border-red-200 rounded-md p-4">
+          <div className="flex">
+            <div className="ml-3">
+              <h3 className="text-sm font-medium text-red-800">Error</h3>
+              <div className="mt-2 text-sm text-red-700">
+                <p>{error}</p>
+              </div>
+              <div className="mt-4">
+                <button
+                  onClick={loadData}
+                  className="bg-red-100 px-2 py-1 rounded-md text-sm font-medium text-red-800 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                >
+                  Reintentar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="bg-white shadow rounded-lg">
         <div className="px-4 py-5 sm:p-6">
@@ -330,6 +339,14 @@ const ProductsPage: React.FC = () => {
               <h3 className="text-lg font-medium text-gray-900 mb-4">
                 {editingProduct ? 'Editar Producto' : 'Nuevo Producto'}
               </h3>
+              
+              {/* Mostrar error dentro del modal */}
+              {error && isModalOpen && (
+                <div className="mb-4 bg-red-50 border border-red-200 rounded-md p-3">
+                  <div className="text-sm text-red-700">{error}</div>
+                </div>
+              )}
+              
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
@@ -352,8 +369,8 @@ const ProductsPage: React.FC = () => {
                     <select
                       id="category"
                       required
-                      value={formData.categoryId}
-                      onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
+                      value={formData.category  || ''}
+                      onChange={(e) => setFormData({ ...formData, category: parseInt(e.target.value) || 0 })}
                       className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     >
                       <option value="">Seleccione una categoría</option>
@@ -417,8 +434,8 @@ const ProductsPage: React.FC = () => {
                       <label key={tag.id} className="flex items-center space-x-2">
                         <input
                           type="checkbox"
-                          checked={formData.tagIds.includes(tag.id.toString())}
-                          onChange={() => handleTagToggle(tag.id.toString())}
+                          checked={formData.tags.includes(tag.id)}
+                          onChange={() => handleTagToggle(tag.id)}
                           className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                         />
                         <span className="flex items-center space-x-1">

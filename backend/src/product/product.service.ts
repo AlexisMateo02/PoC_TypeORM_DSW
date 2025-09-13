@@ -94,16 +94,20 @@ async function updateProduct(id: number, productData: ProductUpdateData) {
 		}
 		product.category = category
 	}
-	if (tagIds !== undefined && Array.isArray(tagIds) && tagIds.length > 0) {
-		const tags = await em.findBy(Tag, { id: In(tagIds) })
-		if (tags.length !== tagIds.length) {
-			const foundTagIds = tags.map(tag => tag.id)
-			const missingTagIds = tagIds.filter(id => !foundTagIds.includes(id))
-			throw new Error(`Tags not found: ${missingTagIds.join(', ')}`)
+	if (tagIds !== undefined && Array.isArray(tagIds)) {
+		if (tagIds.length > 0) {
+			const tags = await em.findBy(Tag, { id: In(tagIds) })
+			if (tags.length !== tagIds.length) {
+				const foundTagIds = tags.map(tag => tag.id)
+				const missingTagIds = tagIds.filter(id => !foundTagIds.includes(id))
+				throw new Error(`Tags not found: ${missingTagIds.join(', ')}`)
+			}
+			product.tags = tags
+		} else {
+			product.tags = []
 		}
-		product.tags = tags
 	}
-	if (productFields.name && productFields.name !== productFields.name) {
+	if (productFields.name && productFields.name !== product.name) {
 		const existingProduct = await em.findOne(Product, { where: { name: productFields.name } })
 		if (existingProduct) {
 			throw new Error(`Product with name '${productFields.name}' already exists`)
