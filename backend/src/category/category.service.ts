@@ -1,5 +1,6 @@
 import { AppDataSource } from '../shared/db/orm.js'
 import { Category } from './category.entity.js'
+import { Product } from '../product/product.entity.js'
 
 const em = AppDataSource.manager
 
@@ -21,13 +22,13 @@ function validateId(id: number): void {
 
 //! TypeORM: find
 async function getAllCategories() {
-	return await em.find(Category)
+	return await em.find(Category, { relations: ['products'] })
 }
 
 //! TypeORM: findOne
 async function getCategoryById(id: number) {
 	validateId(id)
-	const category = await em.findOne(Category, { where: { id } })
+	const category = await em.findOne(Category, { where: { id }, relations: ['products'] })
 	if (!category) {
 		throw new Error(`Category with ID ${id} not found`)
 	}
@@ -63,7 +64,15 @@ async function updateCategory(id: number, categoryData: CategoryUpdateData) {
 
 //! TypeORM: delete directo por ID
 async function deleteCategory(id: number) {
-	await getCategoryById(id)
+	const category = await getCategoryById(id)
+	const productCount = await em
+		.createQueryBuilder(Product, 'product')
+		.leftJoin('product.category', 'category')
+		.where('category.id = :categoryId', { categoryId: id })
+		.getCount()
+	if (productCount > 0) {
+		throw new Error(`Category ${category.name} categorizes ${productCount} product${productCount > 1 ? 's' : ''}`)
+	}
 	await em.delete(Category, { id })
 	return true
 }

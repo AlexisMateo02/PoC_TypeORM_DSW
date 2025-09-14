@@ -45,7 +45,5 @@ Character "*" -- "*" Item
 
 ## Lectura Adicional
 
-Basado en los patrones:
-
 - [Data Mapper](https://www.martinfowler.com/eaaCatalog/dataMapper.html),
 - [Documentación de TypeORM](https://typeorm.io/docs/getting-started/)

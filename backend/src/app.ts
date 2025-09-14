@@ -3,7 +3,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 import morgan from 'morgan'
 import cors from 'cors'
-import { error, success } from './shared/errors/httpResponses.js'
+import { error } from './shared/errors/httpResponses.js'
 import { productRouter } from './product/product.routes.js'
 import { categoryRouter } from './category/category.routes.js'
 import { tagRouter } from './tag/tag.routes.js'
@@ -17,10 +17,12 @@ const app: express.Application = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(morgan('dev'))
-app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3001',
-  credentials: true,
-}))
+app.use(
+	cors({
+		origin: process.env.FRONTEND_URL || 'http://localhost:3001',
+		credentials: true,
+	})
+)
 
 //TODO: TypeORM no necesita el equivalente al RequestContext.create de MikroORM
 //TODO: TypeORM maneja las conexiones internamente

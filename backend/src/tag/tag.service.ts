@@ -1,5 +1,6 @@
 import { AppDataSource } from '../shared/db/orm.js'
 import { Tag } from './tag.entity.js'
+import { Product } from '../product/product.entity.js'
 
 const em = AppDataSource.manager
 
@@ -23,13 +24,13 @@ function validateId(id: number): void {
 
 //! TypeORM: find
 async function getAllTags() {
-	return await em.find(Tag)
+	return await em.find(Tag, { relations: ['products'] })
 }
 
 //! TypeORM: findOne
 async function getTagById(id: number) {
 	validateId(id)
-	const tag = await em.findOne(Tag, { where: { id } })
+	const tag = await em.findOne(Tag, { where: { id }, relations: ['products'] })
 	if (!tag) {
 		throw new Error(`Tag with ID ${id} not found`)
 	}
@@ -65,7 +66,15 @@ async function updateTag(id: number, tagData: TagUpdateData) {
 
 //! TypeORM: delete directo por ID
 async function deleteTag(id: number) {
-	await getTagById(id)
+	const tag = await getTagById(id)
+	const productCount = await em
+		.createQueryBuilder(Product, 'product')
+		.leftJoin('product.tags', 'tag')
+		.where('tag.id = :tagId', { tagId: id })
+		.getCount()
+	if (productCount > 0) {
+		throw new Error(`Tag ${tag.name} is used by ${productCount} product${productCount > 1 ? 's' : ''}`)
+	}
 	await em.delete(Tag, { id })
 	return true
 }

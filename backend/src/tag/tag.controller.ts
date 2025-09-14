@@ -75,6 +75,9 @@ async function remove(req: Request, res: Response) {
 		if (err.message.includes('not found')) {
 			return error.NotFound(res, err.message)
 		}
+		if (err.message.includes('is used by')) {
+			return error.DuplicateEntry(res, err.message)
+		}
 		console.error('Error deleting tag:', err)
 		return error.InternalServerError(res, 'Failed to delete tag')
 	}

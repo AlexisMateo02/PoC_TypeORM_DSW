@@ -10,11 +10,18 @@ const ProductsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  const [formData, setFormData] = useState<CreateProductDTO>({
+  const [formData, setFormData] = useState<{
+    name: string;
+    description: string;
+    price: number | string;
+    stock: number | string;
+    category: number;
+    tags: number[];
+  }>({
     name: '',
     description: '',
-    price: 0,
-    stock: 0,
+    price: '',
+    stock: '',
     category: 0,
     tags: [],
   });
@@ -48,17 +55,25 @@ const ProductsPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validar que category no sea 0 (valor por defecto)
     if (!formData.category) {
       setError('Por favor, seleccione una categoría.');
       return;
     }
 
+    const submitData: CreateProductDTO = {
+      name: formData.name,
+      description: formData.description,
+      price: typeof formData.price === 'string' ? parseFloat(formData.price) || 0 : formData.price,
+      stock: typeof formData.stock === 'string' ? parseInt(formData.stock) || 0 : formData.stock,
+      category: formData.category,
+      tags: formData.tags,
+    };
+
     try {
       if (editingProduct) {
         await api.updateProduct(editingProduct.id.toString(), formData as UpdateProductDTO);
       } else {
-        await api.createProduct(formData);
+        await api.createProduct(submitData);
       }
       await loadData();
       closeModal();
@@ -97,8 +112,8 @@ const ProductsPage: React.FC = () => {
       setFormData({
         name: '',
         description: '',
-        price: 0,
-        stock: 0,
+        price: '',
+        stock: '',
         category: 0,
         tags: [],
       });
@@ -113,8 +128,8 @@ const ProductsPage: React.FC = () => {
     setFormData({
       name: '',
       description: '',
-      price: 0,
-      stock: 0,
+      price: '',
+      stock: '',
       category: 0,
       tags: [],
     });
@@ -406,7 +421,8 @@ const ProductsPage: React.FC = () => {
                       min="0"
                       step="0.01"
                       value={formData.price}
-                      onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
+                      placeholder="0.00"
+                      onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                       className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
@@ -420,7 +436,8 @@ const ProductsPage: React.FC = () => {
                       required
                       min="0"
                       value={formData.stock}
-                      onChange={(e) => setFormData({ ...formData, stock: parseInt(e.target.value) || 0 })}
+                      placeholder="0"
+                      onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
                       className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
