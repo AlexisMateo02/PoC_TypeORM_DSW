@@ -7,7 +7,7 @@ import { error } from './shared/errors/httpResponses.js'
 import { productRouter } from './product/product.routes.js'
 import { categoryRouter } from './category/category.routes.js'
 import { tagRouter } from './tag/tag.routes.js'
-import { syncSchema } from './shared/db/orm.js'
+import { initializeDatabase } from './shared/db/orm.js'
 
 dotenv.config()
 const port: number = Number(process.env.PORT) || 3000
@@ -36,7 +36,7 @@ app.use((_, res) => {
 	return error.NotFound(res)
 })
 
-await syncSchema() //! Utilizar solo para el desarrollo; nunca en producción
+await initializeDatabase() //! Utilizar solo para el desarrollo; nunca en producción
 
 app.listen(port, () => {
 	console.log(`Server running on http://localhost:${port}/`)

@@ -5,8 +5,8 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
 
 dotenv.config()
 
+//TODO: Configuración del ORM
 export const AppDataSource = new DataSource({
-	//TODO: Configuración básica del ORM
 	type: 'mysql',
 	host: process.env.DB_HOST,
 	port: Number(process.env.DB_PORT),
@@ -14,20 +14,17 @@ export const AppDataSource = new DataSource({
 	password: process.env.DB_PASSWORD,
 	database: process.env.DB_NAME,
 	entities: ['dist/**/*.entity.js'],
+	migrations: ['dist/migrations/*.js'],
 	logger: 'advanced-console',
 	logging: true,
 	namingStrategy: new SnakeNamingStrategy(),
-	//TODO Configuración del ORM para generar el esquema en la BD
-	//! Utilizar solo para el desarrollo; nunca en producción
-	synchronize: true,
+	synchronize: false, //! Utilizar solo para el desarrollo; nunca en producción
+	migrationsRun: true,
 })
 
-export const syncSchema = async () => {
+export const initializeDatabase = async () => {
 	if (!AppDataSource.isInitialized) {
 		await AppDataSource.initialize()
 		console.log('✅ TypeORM inicializado correctamente')
 	}
-	//! En TypeORM, "synchronize: true" hace sincroniza el Schema automáticamente
-	//! Pero si se necesita control manual:
-	//! await AppDataSource.synchronize();
 }

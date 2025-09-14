@@ -9,7 +9,12 @@
     "build": "tsc -p ./tsconfig.json",
     "start:dev": "tsc-watch --noClear -p ./tsconfig.json --onSuccess \"node ./dist/app.js\"",
     "db:setup": "pnpm build && node ./dist/shared/db/scripts/setupDataBase.js",
-    "dev": "pnpm db:setup && pnpm start:dev"
+    "dev": "pnpm db:setup && pnpm start:dev",
+    "typeorm": "typeorm-ts-node-esm -d ./dist/shared/db/orm.js",
+    "m:gen": "pnpm build && pnpm typeorm migration:generate",
+    "m:run": "pnpm build && pnpm typeorm migration:run",
+    "m:revert": "pnpm typeorm migration:revert",
+    "m:show": "pnpm typeorm migration:show"
   },
   "keywords": [],
   "author": "",
@@ -30,6 +35,7 @@
     "@types/express": "5.0.3",
     "@types/morgan": "^1.9.10",
     "@types/node": "24.0.13",
+    "ts-node": "^10.9.2",
     "tsc-watch": "7.1.1",
     "typescript": "5.8.3"
   }
