@@ -139,7 +139,7 @@ Este comando:
 
 ```bash
 # Generar nueva migración
-pnpm m:gen ./src/migrations/NombreMigracion
+pnpm m:gen ./src/migrations/nombreMigracion
 
 # Ejecutar migraciones pendientes
 pnpm m:run
@@ -149,6 +149,16 @@ pnpm m:revert
 
 # Ver estado de migraciones
 pnpm m:show
+```
+
+#### Ejecución de Seeders
+
+```bash
+# Ejecutar todos los seeders
+pnpm seed:all
+
+# Ejecutar un seeder específico
+pnpm seed:one nombreSemilla
 ```
 
 ### Frontend

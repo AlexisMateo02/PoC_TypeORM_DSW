@@ -14,7 +14,9 @@
     "m:gen": "pnpm build && pnpm typeorm migration:generate",
     "m:run": "pnpm build && pnpm typeorm migration:run",
     "m:revert": "pnpm typeorm migration:revert",
-    "m:show": "pnpm typeorm migration:show"
+    "m:show": "pnpm typeorm migration:show",
+    "seed:all": "pnpm build && node ./dist/shared/db/scripts/runSeeders.js",
+    "seed:one": "pnpm build && node ./dist/shared/db/scripts/runOneSeeder.js"
   },
   "keywords": [],
   "author": "",

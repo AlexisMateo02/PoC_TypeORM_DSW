@@ -18,13 +18,13 @@ export const AppDataSource = new DataSource({
 	logger: 'advanced-console',
 	logging: true,
 	namingStrategy: new SnakeNamingStrategy(),
-	synchronize: false, //! Utilizar solo para el desarrollo; nunca en producción
-	migrationsRun: true,
+	synchronize: true, //! Utilizar solo para el desarrollo; nunca en producción
+	migrationsRun: false,
 })
 
 export const initializeDatabase = async () => {
 	if (!AppDataSource.isInitialized) {
 		await AppDataSource.initialize()
-		console.log('✅ TypeORM inicializado correctamente')
+		console.log('TypeORM inicializado correctamente')
 	}
 }

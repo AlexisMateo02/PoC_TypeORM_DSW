@@ -77,8 +77,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             <div className="flex items-center space-x-4">
               <div className="hidden md:flex items-center space-x-4 text-sm text-gray-600">
                 <span className="flex items-center">
-                  <span className="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
-                  Conectado
+                  <span className="w-2 h-2 bg-blue-600 rounded-full mr-2"></span>
+                      {new Date().toLocaleDateString('es-ES', {
+                      day: 'numeric',
+                      month: 'long',
+                      year: 'numeric'
+                    })}
                 </span>
               </div>
             </div>
@@ -193,10 +197,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <span className="font-medium text-blue-600">{getCurrentPageName()}</span>
               </div>
 
-              <div className="flex items-center space-x-2 text-sm text-gray-500">
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                <span>En línea</span>
-              </div>
             </div>
           </div>
         </div>
