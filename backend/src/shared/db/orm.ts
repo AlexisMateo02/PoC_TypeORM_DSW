@@ -5,7 +5,6 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
 
 dotenv.config()
 
-//TODO: Configuración del ORM
 export const AppDataSource = new DataSource({
 	type: 'mysql',
 	host: process.env.DB_HOST,
@@ -18,7 +17,7 @@ export const AppDataSource = new DataSource({
 	logger: 'advanced-console',
 	logging: true,
 	namingStrategy: new SnakeNamingStrategy(),
-	synchronize: true, //! Utilizar solo para el desarrollo; nunca en producción
+	synchronize: process.env.NODE_ENV === 'develoment',
 	migrationsRun: false,
 })
 

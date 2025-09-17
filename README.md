@@ -69,6 +69,9 @@ PORT=3000
 
 #! URL para CORS
 FRONTEND_URL=http://localhost:3001
+
+#! Configuración de la aplicación [development | production]
+NODE_ENV=development
 ```
 
 **⚠️ Importante:** Reemplaza `tu_password_root_aquí` con la contraseña real de tu usuario `root` de MySQL.
