@@ -12,12 +12,12 @@ POST http://localhost:3000/api/products
 Content-Type: application/json
 
 {
-    "name": "Leche Descremada La Serenísima",
-    "description": "Leche descremada pasteurizada, rica en calcio y proteínas.",
-    "price": 850.50,
+    "name": "Leche Entera La Serenísima",
+    "description": "Leche entera pasteurizada, rica en calcio y proteínas.",
+    "price": 2350.50,
     "stock": 100,
     "category": 1,
-    "tags": [1, 2]
+    "tags": [1]
 }
 
 ### POST2
@@ -26,12 +26,12 @@ POST http://localhost:3000/api/products
 Content-Type: application/json
 
 {
-    "name": "Pan Integral Bimbo",
-    "description": "Pan integral con semillas, rico en fibra y nutrientes.",
-    "price": 1200.00,
+    "name": "Manzanas Verdes 1kg",
+    "description": "Fruta del manzano común.",
+    "price": 2890,
     "stock": 150,
-    "category": 2,
-    "tags": [3]
+    "category": 3,
+    "tags": [2, 3, 4]
 }
 
 ### POST PRODUCT TO UPDATE
@@ -40,12 +40,12 @@ POST http://localhost:3000/api/products
 Content-Type: application/json
 
 {
-    "name": "Detergente Ala",
-    "description": "Detergente líquido para ropa, concentrado.",
-    "price": 2500.75,
-    "stock": 100,
-    "category": 3,
-    "tags": []
+    "name": "Vacío 1kg",
+    "description": "Corte de carne bovina proveniente de la zona del abdomen.",
+    "price": 12650.75,
+    "stock": 20,
+    "category": 2,
+    "tags": [1, 4]
 }
 
 ### POST PRODUCT TO DELETE
@@ -54,12 +54,12 @@ POST http://localhost:3000/api/products
 Content-Type: application/json
 
 {
-    "name": "Coca Cola 1.5L",
-    "description": "Bebida gaseosa cola, botella de 1.5 litros.",
-    "price": 1800.00,
+    "name": "Castañas De Cajú Natfood 80g",
+    "description": "Semillas del fruto del árbol de cajú.",
+    "price": 2999.99,
     "stock": 200,
     "category": 3,
-    "tags": []
+    "tags": [2, 3, 4]
 }
 
 ### PUT
@@ -68,12 +68,12 @@ PUT http://localhost:3000/api/products/{{idToUpdate}}
 Content-Type: application/json
 
 {
-    "name": "Detergente Ala Concentrado",
-    "description": "Detergente líquido para ropa, fórmula concentrada que rinde más y limpia mejor.",
-    "price": 2750.00,
-    "stock": 120,
-    "category": 3,
-    "tags": [3]
+    "name": "Vacío de Novillo 1kg",
+    "description": "Corte de carne bovina proveniente de la zona del abdomen.",
+    "price": 13450,
+    "stock": 12,
+    "category": 2,
+    "tags": [1, 4]
 }
 
 ### DELETE

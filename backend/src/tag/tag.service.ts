@@ -1,8 +1,5 @@
-import { AppDataSource } from '../shared/db/orm.js'
 import { Tag } from './tag.entity.js'
 import { Product } from '../product/product.entity.js'
-
-const em = AppDataSource.manager
 
 interface TagCreateData {
 	name: string
@@ -24,58 +21,58 @@ function validateId(id: number): void {
 
 //! TypeORM: find
 async function getAllTags() {
-	return await em.find(Tag, { relations: ['products'] })
+	return await Tag.find({ relations: ['products'] })
 }
 
 //! TypeORM: findOne
 async function getTagById(id: number) {
 	validateId(id)
-	const tag = await em.findOne(Tag, { where: { id }, relations: ['products'] })
+	const tag = await Tag.findOne({ where: { id }, relations: ['products'] })
 	if (!tag) {
 		throw new Error(`Tag with ID ${id} not found`)
 	}
 	return tag
 }
 
-//! TypeORM: create + save
+//! TypeORM: assign + save
 async function createTag(tagData: TagCreateData) {
-	const tag = em.create(Tag, tagData)
-	const existingTag = await em.findOne(Tag, {
+	const existingTag = await Tag.findOne({
 		where: { name: tagData.name },
 	})
 	if (existingTag) {
 		throw new Error(`Tag with name '${tagData.name}' already exists`)
 	}
-	await em.save(tag)
-	return await em.findOne(Tag, { where: { id: tag.id } })
+	const tag = new Tag()
+	Object.assign(tag, tagData)
+	await tag.save()
+	return await Tag.findOne({ where: { id: tag.id } })
 }
 
-//! TypeORM: findOne + merge + save
+//! TypeORM: findOne + assign + save
 async function updateTag(id: number, tagData: TagUpdateData) {
 	const tag = await getTagById(id)
 	if (tagData.name && tagData.name !== tag.name) {
-		const existingTag = await em.findOne(Tag, { where: { name: tagData.name } })
+		const existingTag = await Tag.findOne({ where: { name: tagData.name } })
 		if (existingTag) {
 			throw new Error(`Tag with name '${tagData.name}' already exists`)
 		}
 	}
-	em.merge(Tag, tag, tagData)
-	await em.save(tag)
-	return await em.findOne(Tag, { where: { id: tag.id } })
+	Object.assign(tag, tagData)
+	await tag.save()
+	return await Tag.findOne({ where: { id: tag.id } })
 }
 
-//! TypeORM: delete directo por ID
+//! TypeORM: remove + queryBuilder
 async function deleteTag(id: number) {
 	const tag = await getTagById(id)
-	const productCount = await em
-		.createQueryBuilder(Product, 'product')
+	const productCount = await Product.createQueryBuilder('product')
 		.leftJoin('product.tags', 'tag')
 		.where('tag.id = :tagId', { tagId: id })
 		.getCount()
 	if (productCount > 0) {
 		throw new Error(`Tag ${tag.name} is used by ${productCount} product${productCount > 1 ? 's' : ''}`)
 	}
-	await em.delete(Tag, { id })
+	await tag.remove()
 	return true
 }
 

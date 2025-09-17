@@ -1,8 +1,5 @@
-import { AppDataSource } from '../shared/db/orm.js'
 import { Category } from './category.entity.js'
 import { Product } from '../product/product.entity.js'
-
-const em = AppDataSource.manager
 
 interface CategoryCreateData {
 	name: string
@@ -22,58 +19,58 @@ function validateId(id: number): void {
 
 //! TypeORM: find
 async function getAllCategories() {
-	return await em.find(Category, { relations: ['products'] })
+	return await Category.find({ relations: ['products'] })
 }
 
 //! TypeORM: findOne
 async function getCategoryById(id: number) {
 	validateId(id)
-	const category = await em.findOne(Category, { where: { id }, relations: ['products'] })
+	const category = await Category.findOne({ where: { id }, relations: ['products'] })
 	if (!category) {
 		throw new Error(`Category with ID ${id} not found`)
 	}
 	return category
 }
 
-//! TypeORM: create + save
+//! TypeORM: assign + save
 async function createCategory(categoryData: CategoryCreateData) {
-	const category = em.create(Category, categoryData)
-	const existingCategory = await em.findOne(Category, {
+	const existingCategory = await Category.findOne({
 		where: { name: categoryData.name },
 	})
 	if (existingCategory) {
 		throw new Error(`Category with name '${categoryData.name}' already exists`)
 	}
-	await em.save(category)
-	return await em.findOne(Category, { where: { id: category.id } })
+	const category = new Category()
+	Object.assign(category, categoryData)
+	await category.save()
+	return await Category.findOne({ where: { id: category.id } })
 }
 
-//! TypeORM: findOne + merge + save
+//! TypeORM: findOne + assign + save
 async function updateCategory(id: number, categoryData: CategoryUpdateData) {
 	const category = await getCategoryById(id)
 	if (categoryData.name && categoryData.name !== category.name) {
-		const existingCategory = await em.findOne(Category, { where: { name: categoryData.name } })
+		const existingCategory = await Category.findOne({ where: { name: categoryData.name } })
 		if (existingCategory) {
 			throw new Error(`Category with name '${categoryData.name}' already exists`)
 		}
 	}
-	em.merge(Category, category, categoryData)
-	await em.save(category)
-	return await em.findOne(Category, { where: { id: category.id } })
+	Object.assign(category, categoryData)
+	await category.save()
+	return await Category.findOne({ where: { id: category.id } })
 }
 
-//! TypeORM: delete directo por ID
+//! TypeORM: remove + queryBuilder
 async function deleteCategory(id: number) {
 	const category = await getCategoryById(id)
-	const productCount = await em
-		.createQueryBuilder(Product, 'product')
+	const productCount = await Product.createQueryBuilder('product')
 		.leftJoin('product.category', 'category')
 		.where('category.id = :categoryId', { categoryId: id })
 		.getCount()
 	if (productCount > 0) {
 		throw new Error(`Category ${category.name} categorizes ${productCount} product${productCount > 1 ? 's' : ''}`)
 	}
-	await em.delete(Category, { id })
+	await category.remove()
 	return true
 }
 

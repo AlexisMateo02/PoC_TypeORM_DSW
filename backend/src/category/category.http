@@ -22,8 +22,8 @@ POST http://localhost:3000/api/categories
 Content-Type: application/json
 
 {
-    "name": "Panadería",
-    "description": "Productos de panadería frescos como pan, facturas y masas."
+    "name": "Carnicería",
+    "description": "Carnes bovina y ovina, pollos y otras alternativas."
 }
 
 ### POST CATEGORY TO UPDATE
@@ -32,8 +32,8 @@ POST http://localhost:3000/api/categories
 Content-Type: application/json
 
 {
-    "name": "Limpieza",
-    "description": "Productos de limpieza para el hogar."
+    "name": "Frutas",
+    "description": "Partes de las plantas fundamentales para la nutrición."
 }
 
 ### POST CATEGORY TO DELETE
@@ -42,8 +42,8 @@ POST http://localhost:3000/api/categories
 Content-Type: application/json
 
 {
-    "name": "Bebidas",
-    "description": "Bebidas alcohólicas y no alcohólicas."
+    "name": "Postres",
+    "description": "Alimento dulce servido como final de una comida."
 }
 
 ### PUT
@@ -52,8 +52,8 @@ PUT http://localhost:3000/api/categories/{{idToUpdate}}
 Content-Type: application/json
 
 {
-    "name": "Limpieza e Higiene",
-    "description": "Productos de limpieza para el hogar e higiene personal como detergentes, desinfectantes y artículos de tocador."
+    "name": "Frutas y Verduras",
+    "description": "Partes comestibles de las plantas fundamentales para la nutrición."
 }
 
 ### DELETE

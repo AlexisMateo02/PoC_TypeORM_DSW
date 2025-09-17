@@ -1,40 +1,54 @@
-import { EntityManager } from 'typeorm'
 import { Product } from '../../../product/product.entity.js'
 import { Category } from '../../../category/category.entity.js'
 import { Tag } from '../../../tag/tag.entity.js'
 
 export class TestSeeder {
-	async run(em: EntityManager): Promise<void> {
-		const category = em.create(Category, {
+	async run(): Promise<void> {
+		const existingCategories = await Category.count()
+		if (existingCategories > 0) {
+			console.log('Categories already exist, skipping...')
+			return
+		}
+		const categoryData = {
 			name: 'Panadería',
 			description: 'Productos de panadería y repostería',
-		})
-		await em.save(category)
+		}
+		const category = new Category()
+		Object.assign(category, categoryData)
+		await category.save()
 
-		const tag1 = em.create(Tag, {
+		const tag1Data = {
 			name: 'Keto',
 			description: 'Productos bajos en carbohidratos',
 			color: '#8B5CF6',
-		})
-		await em.save(tag1)
+		}
 
-		const tag2 = em.create(Tag, {
+		const tag2Data = {
 			name: 'Sin TACC',
 			description: 'Productos sin gluten',
 			color: '#10B981',
-		})
-		await em.save(tag2)
+		}
 
-		const product = em.create(Product, {
-			name: 'Pan Integral Keto',
+		const tag1 = new Tag()
+		Object.assign(tag1, tag1Data)
+		await tag1.save()
+
+		const tag2 = new Tag()
+		Object.assign(tag2, tag2Data)
+		await tag2.save()
+
+		const productData = {
+			name: 'Pan Keto',
 			price: 4154.5,
-			description: 'Pan bajo en carbohidratos para dieta cetogénica',
+			description: 'Pan de harina de almedras bajo en carbohidratos',
 			stock: 20,
 			category: category,
 			tags: [tag1, tag2],
-		})
+		}
 
-		await em.save(product)
+		const product = new Product()
+		Object.assign(product, productData)
+		await product.save()
 
 		console.log('TestSeeder ejecutado correctamente')
 	}

@@ -121,6 +121,12 @@ pnpm dev
 pnpm build
 ```
 
+#### Correr el programa sin compilar
+
+```bash
+pnpm start:run
+```
+
 #### Configuración de Base de Datos
 
 ```bash
@@ -134,6 +140,19 @@ Este comando:
 - Otorga los permisos necesarios
 
 **⚠️ Importante:** Es posible realizar la configuración de la base de datos ejecutando la siguiente Query en el `localhost` del usario `root` de MySQL. Estos comandos se encuentran especificados [mysql-commands.sql](./docs/mysql-commands.sql).
+
+#### Sincronización de Schemas
+
+```bash
+# Sincronizar el schema directamente en la Base de Datos
+pnpm schema:sync
+
+# Mostrar el SQL que se espera que se aplique
+pnpm schema:log
+
+# Eliminar el schema actual
+pnpm schema:drop
+```
 
 #### Gestión de Migraciones
 

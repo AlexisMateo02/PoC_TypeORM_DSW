@@ -28,12 +28,10 @@ async function runOneSeeder(seederName?: string) {
 			await AppDataSource.initialize()
 		}
 
-		const em = AppDataSource.manager
-
 		const SeederClass = SEEDERS[targetSeeder as SeederName]
 		const seederInstance = new SeederClass()
 
-		await seederInstance.run(em)
+		await seederInstance.run()
 	} catch (error) {
 		console.error('Error ejecutando seeder específico:', error)
 		process.exit(1)

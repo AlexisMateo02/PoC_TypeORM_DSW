@@ -12,8 +12,9 @@ POST http://localhost:3000/api/tags
 Content-Type: application/json
 
 {
-    "name": "Sin TACC",
-    "description": "Productos libres de gluten, aptos para celíacos."
+    "name": "Alto en Proteína",
+    "color": "#C90101FF",
+    "description": "Alimentos con un alto contenido proteico."
 }
 
 ### POST2
@@ -24,7 +25,7 @@ Content-Type: application/json
 {
     "name": "Vegano",
     "color": "#4ECDC4",
-    "description": "Productos sin ingredientes de origen animal."
+    "description": "Sin ingredientes de origen animal."
 }
 
 ### POST TAG TO UPDATE
@@ -35,7 +36,7 @@ Content-Type: application/json
 {
     "name": "Orgánico",
     "color": "#45B7D1",
-    "description": "Productos cultivados sin pesticidas ni químicos."
+    "description": "Cultivados sin pesticidas ni químicos."
 }
 
 ### POST TAG TO DELETE
@@ -44,9 +45,9 @@ POST http://localhost:3000/api/tags
 Content-Type: application/json
 
 {
-    "name": "Keto",
+    "name": "Paleo",
     "color": "#96CEB4",
-    "description": "Productos bajos en carbohidratos."
+    "description": "Adecuados para dieta paleolítica."
 }
 
 ### PUT
@@ -57,7 +58,7 @@ Content-Type: application/json
 {
     "name": "Orgánico Certificado",
     "color": "#2ECC71",
-    "description": "Productos cultivados sin pesticidas ni químicos artificiales, con certificación orgánica oficial."
+    "description": "Cultivados sin pesticidas ni químicos artificiales, con certificación orgánica oficial."
 }
 
 ### DELETE

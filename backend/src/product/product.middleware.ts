@@ -4,7 +4,12 @@ import { error } from '../shared/errors/httpResponses.js'
 function sanitizeProductInput(req: Request, res: Response, next: NextFunction) {
 	req.body.sanitizedInput = {
 		name: typeof req.body.name === 'string' ? req.body.name.trim() : undefined,
-		description: typeof req.body.description === 'string' ? req.body.description.trim() : req.body.description === null ? null : undefined,
+		description:
+			typeof req.body.description === 'string'
+				? req.body.description.trim()
+				: req.body.description === null
+				? null
+				: undefined,
 		price: typeof req.body.price === 'string' ? parseFloat(req.body.price) : req.body.price,
 		stock: typeof req.body.stock === 'string' ? parseInt(req.body.stock, 10) : req.body.stock,
 		category: typeof req.body.category === 'string' ? parseInt(req.body.category, 10) : req.body.category,
@@ -33,7 +38,8 @@ function validateCreateInput(req: Request, res: Response, next: NextFunction) {
 	if (isNaN(input.category)) return error.BadRequest(res, 'Product category is required')
 	if (input.name.length < 2) return error.BadRequest(res, 'Name must be at least 2 characters')
 	if (input.name.length > 255) return error.BadRequest(res, 'Name cannot exceed 255 characters')
-	if (input.description && input.description.length > 255) return error.BadRequest(res, 'Description cannot exceed 255 characters')
+	if (input.description && input.description.length > 255)
+		return error.BadRequest(res, 'Description cannot exceed 255 characters')
 	if (input.price <= 0) return error.BadRequest(res, 'Price must be greater than 0')
 	if (input.stock < 0) return error.BadRequest(res, 'Stock cannot be negative')
 	if (input.tags.length > 50) return error.BadRequest(res, 'Cannot assign more than 50 tags to a product')
@@ -58,8 +64,8 @@ function validateUpdateInput(req: Request, res: Response, next: NextFunction) {
 		}
 	}
 	if (input.description !== undefined) {
-		if (input.description !== null && input.description.length > 500) {
-			return error.BadRequest(res, 'Description cannot exceed 500 characters')
+		if (input.description !== null && input.description.length > 255) {
+			return error.BadRequest(res, 'Description cannot exceed 255 characters')
 		}
 	}
 	if (input.price !== undefined) {

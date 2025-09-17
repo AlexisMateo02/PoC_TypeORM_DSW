@@ -1,6 +1,10 @@
 import { TestSeeder } from './TestSeeder.js'
 import { SeederWithTransaction } from './SeederWithTransaction.js'
 
+export interface SeederInterface {
+	run(): Promise<void>
+}
+
 export const SEEDERS = {
 	test: TestSeeder,
 	test2: SeederWithTransaction,
@@ -8,6 +12,6 @@ export const SEEDERS = {
 
 export type SeederName = keyof typeof SEEDERS
 
-export const getAllSeederNames = (): SeederName[] => {
+export function getAllSeederNames(): SeederName[] {
 	return Object.keys(SEEDERS) as SeederName[]
 }

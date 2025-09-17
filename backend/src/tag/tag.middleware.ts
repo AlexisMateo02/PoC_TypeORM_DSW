@@ -5,7 +5,12 @@ function sanitizeTagInput(req: Request, res: Response, next: NextFunction) {
 	req.body.sanitizedInput = {
 		name: typeof req.body.name === 'string' ? req.body.name.trim() : undefined,
 		color: typeof req.body.color === 'string' ? req.body.color.trim().toUpperCase() : undefined,
-		description: typeof req.body.description === 'string' ? req.body.description.trim() : req.body.description === null ? null : undefined,
+		description:
+			typeof req.body.description === 'string'
+				? req.body.description.trim()
+				: req.body.description === null
+				? null
+				: undefined,
 	}
 	Object.keys(req.body.sanitizedInput).forEach(key => {
 		if (req.body.sanitizedInput[key] === undefined) {
@@ -22,7 +27,8 @@ function validateCreateInput(req: Request, res: Response, next: NextFunction) {
 	if (input.name.length > 255) return error.BadRequest(res, 'Name cannot exceed 255 characters')
 	if (!/^#(?:[0-9A-F]{3}|[0-9A-F]{6}|[0-9A-F]{4}|[0-9A-F]{8})$/i.test(input.color))
 		return error.BadRequest(res, 'Color must be a valid hexadecimal color code (e.g., #FF5733)')
-	if (input.description && input.description.length > 255) return error.BadRequest(res, 'Description cannot exceed 255 characters')
+	if (input.description && input.description.length > 255)
+		return error.BadRequest(res, 'Description cannot exceed 255 characters')
 	next()
 }
 
@@ -49,8 +55,8 @@ function validateUpdateInput(req: Request, res: Response, next: NextFunction) {
 		}
 	}
 	if (input.description !== undefined) {
-		if (input.description !== null && input.description.length > 500) {
-			return error.BadRequest(res, 'Description cannot exceed 500 characters')
+		if (input.description !== null && input.description.length > 255) {
+			return error.BadRequest(res, 'Description cannot exceed 255 characters')
 		}
 	}
 	next()

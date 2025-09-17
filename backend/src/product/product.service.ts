@@ -1,10 +1,7 @@
-import { AppDataSource } from '../shared/db/orm.js'
 import { Product } from './product.entity.js'
 import { Category } from '../category/category.entity.js'
 import { Tag } from '../tag/tag.entity.js'
 import { In } from 'typeorm'
-
-const em = AppDataSource.manager
 
 interface ProductCreateData {
 	name: string
@@ -32,13 +29,13 @@ function validateId(id: number): void {
 
 //! TypeORM: find
 async function getAllProducts() {
-	return await em.find(Product, { relations: ['category', 'tags'] })
+	return await await Product.find({ relations: ['category', 'tags'] })
 }
 
 //! TypeORM: findOne
 async function getProductById(id: number) {
 	validateId(id)
-	const product = await em.findOne(Product, {
+	const product = await Product.findOne({
 		where: { id },
 		relations: ['category', 'tags'],
 	})
@@ -48,18 +45,25 @@ async function getProductById(id: number) {
 	return product
 }
 
-//! TypeORM: create + save
+//! TypeORM: assign + save
 async function createProduct(productData: ProductCreateData) {
+	const existingProduct = await Product.findOne({
+		where: { name: productData.name },
+	})
+	if (existingProduct) {
+		throw new Error(`Product with name '${productData.name}' already exists`)
+	}
 	const { category: categoryId, tags: tagIds, ...productFields } = productData
-	const product = em.create(Product, productFields)
-	const category = await em.findOne(Category, { where: { id: categoryId } })
+	const product = new Product()
+	Object.assign(product, productFields)
+	const category = await Category.findOne({ where: { id: categoryId } })
 	if (!category) {
 		throw new Error('Category not found')
 	}
 	product.category = category
 	if (Array.isArray(tagIds)) {
 		if (tagIds.length > 0) {
-			const tags = await em.findBy(Tag, { id: In(tagIds) })
+			const tags = await Tag.findBy({ id: In(tagIds) })
 			if (tags.length !== tagIds.length) {
 				const foundTagIds = tags.map(tag => tag.id)
 				const missingTagIds = tagIds.filter(id => !foundTagIds.includes(id))
@@ -70,25 +74,19 @@ async function createProduct(productData: ProductCreateData) {
 			product.tags = []
 		}
 	}
-	const existingProduct = await em.findOne(Product, {
-		where: { name: productFields.name },
-	})
-	if (existingProduct) {
-		throw new Error(`Product with name '${productFields.name}' already exists`)
-	}
-	await em.save(product)
-	return await em.findOne(Product, {
+	await product.save()
+	return await Product.findOne({
 		where: { id: product.id },
 		relations: ['category', 'tags'],
 	})
 }
 
-//! TypeORM: findOne + merge + save
+//! TypeORM: findOne + assign + save
 async function updateProduct(id: number, productData: ProductUpdateData) {
 	const { category: categoryId, tags: tagIds, ...productFields } = productData
 	const product = await getProductById(id)
 	if (categoryId !== undefined) {
-		const category = await em.findOne(Category, { where: { id: categoryId } })
+		const category = await Category.findOne({ where: { id: categoryId } })
 		if (!category) {
 			throw new Error('Category not found')
 		}
@@ -96,7 +94,7 @@ async function updateProduct(id: number, productData: ProductUpdateData) {
 	}
 	if (tagIds !== undefined && Array.isArray(tagIds)) {
 		if (tagIds.length > 0) {
-			const tags = await em.findBy(Tag, { id: In(tagIds) })
+			const tags = await Tag.findBy({ id: In(tagIds) })
 			if (tags.length !== tagIds.length) {
 				const foundTagIds = tags.map(tag => tag.id)
 				const missingTagIds = tagIds.filter(id => !foundTagIds.includes(id))
@@ -107,24 +105,18 @@ async function updateProduct(id: number, productData: ProductUpdateData) {
 			product.tags = []
 		}
 	}
-	if (productFields.name && productFields.name !== product.name) {
-		const existingProduct = await em.findOne(Product, { where: { name: productFields.name } })
-		if (existingProduct) {
-			throw new Error(`Product with name '${productFields.name}' already exists`)
-		}
-	}
-	em.merge(Product, product, productFields)
-	await em.save(product)
-	return await em.findOne(Product, {
+	Object.assign(product, productFields)
+	await product.save()
+	return await Product.findOne({
 		where: { id: product.id },
 		relations: ['category', 'tags'],
 	})
 }
 
-//! TypeORM: delete directo por ID
+//! TypeORM: remove
 async function deleteProduct(id: number) {
-	await getProductById(id)
-	await em.delete(Product, { id })
+	const product = await getProductById(id)
+	await product.remove()
 	return true
 }
 

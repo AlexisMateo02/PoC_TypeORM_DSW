@@ -23,8 +23,10 @@ export const AppDataSource = new DataSource({
 })
 
 export const initializeDatabase = async () => {
-	if (!AppDataSource.isInitialized) {
+	try {
 		await AppDataSource.initialize()
-		console.log('TypeORM inicializado correctamente')
+		console.log('Base de datos inicializada correctamente')
+	} catch (error) {
+		console.error('Error durante la inicialización de la base de datos:', error)
 	}
 }

@@ -10,7 +10,6 @@ async function runSeeders() {
 
 		console.log('Ejecutando seeders...')
 
-		const em = AppDataSource.manager
 		const seederNames = getAllSeederNames()
 
 		for (const seederName of seederNames) {
@@ -19,7 +18,7 @@ async function runSeeders() {
 			const SeederClass = SEEDERS[seederName]
 			const seederInstance = new SeederClass()
 
-			await seederInstance.run(em)
+			await seederInstance.run()
 		}
 
 		console.log('Todos los seeders ejecutados correctamente')

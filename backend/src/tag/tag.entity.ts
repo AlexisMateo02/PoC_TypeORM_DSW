@@ -10,6 +10,9 @@ export class Tag extends BaseEntity {
 	@Column({ nullable: false })
 	color!: string // Hexadecimal color code: #FF5733
 
+	//@Column({ nullable: false }) //! Propiedad agregada para migración
+	//esObligatorio!: boolean
+
 	@Column({ nullable: true })
 	description?: string
 
