@@ -6,7 +6,7 @@ export class TestSeeder {
 	async run(): Promise<void> {
 		const existingCategories = await Category.count()
 		if (existingCategories > 0) {
-			console.log('Categories already exist, skipping...')
+			console.log('Los datos de prueba ya existen')
 			return
 		}
 		const categoryData = {
