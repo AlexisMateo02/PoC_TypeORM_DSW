@@ -17,7 +17,7 @@ export const AppDataSource = new DataSource({
 	logger: 'advanced-console',
 	logging: true,
 	namingStrategy: new SnakeNamingStrategy(),
-	synchronize: process.env.NODE_ENV === 'develoment',
+	synchronize: process.env.NODE_ENV === 'development',
 	migrationsRun: false,
 })
 
